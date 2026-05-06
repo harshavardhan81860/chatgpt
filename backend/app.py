@@ -2,6 +2,9 @@ import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()   
 
 # Initialize Flask to look for files in the parent directory
 app = Flask(__name__, static_folder='../') 
