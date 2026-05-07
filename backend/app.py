@@ -6,12 +6,11 @@ from dotenv import load_dotenv
 
 load_dotenv()   
 
-# Initialize Flask to look for files in the parent directory
+
 app = Flask(__name__, static_folder='../') 
 CORS(app)
 
-# ! IMPORTANT: Put your key in quotes here. 
-# ! If the key you shared was revoked, generate a new one.
+
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 @app.route('/')
@@ -30,7 +29,7 @@ def chat():
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": "You are HARSHA AI, a helpful and witty assistant built by Harsha."},
                 {"role": "user", "content": user_message}
             ]
         )
