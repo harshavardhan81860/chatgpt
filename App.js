@@ -10,9 +10,7 @@ const handleSend = async () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("/chat", { message: input });
-        body: JSON.stringify({ message: messageToSend }),
-      });
+      const response = await axios.post("/chat", { message: messageToSend });
 
       if (!response.ok) throw new Error("Server error");
 
