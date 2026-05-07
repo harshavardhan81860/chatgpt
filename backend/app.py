@@ -24,37 +24,23 @@ def send_static(path):
 @app.route('/chat', methods=['POST'])
 def chat():
     user_data = request.json
-    user_message = user_data.get("message", "").lower().strip()
-    
-    if "how are you" in user_message:
-    return jsonify({"reply": "fine"})
-    
-    if user_message == "hi":
-        return jsonify({"reply": "hello"})
-    
-    if user_message == "how are you?":
-        return jsonify({"reply": "fine"})
-    
-    if user_message == "good morning":
-        return jsonify({"reply": "good morning"})
-        
-    if user_message == "good morning":
-        return jsonify({"reply": "good morning"})
-    
-    if user_message == "good evening":
-        return jsonify({"reply": "good evening"})
-    
-    if user_message == "good night":
-        return jsonify({"reply": "good night"})
+    user_message = user_data.get("message", "").lower().strip().replace("?", "")
 
-    if user_message == "myself harsha":
-        return jsonify({"reply": "hey harsha thats great"})
+    # --- CUSTOM LOGIC ---
+    if "how are you" in user_message:
+        return jsonify({"reply": "I'm doing great, Harsha! Ready to build some infrastructure."})
     
-    if user_message == "terraform":
-        return jsonify({"reply": "it is a iac tool"})
+    if user_message in ["hi", "hello", "hey"]:
+        return jsonify({"reply": "Hello! How can HARSHA AI help you today?"})
     
-    if user_message == "kubernetes":
-        return jsonify({"reply": "it is a container orc tool"})
+    if "good morning" in user_message:
+        return jsonify({"reply": "Good morning! Time to automate the world."})
+
+    if "terraform" in user_message:
+        return jsonify({"reply": "Terraform is an Infrastructure as Code (IaC) tool by HashiCorp."})
+    
+    if "kubernetes" in user_message or "k8s" in user_message:
+        return jsonify({"reply": "Kubernetes is a powerful container orchestration tool."})
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
