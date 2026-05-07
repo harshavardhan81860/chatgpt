@@ -25,6 +25,10 @@ def send_static(path):
 def chat():
     user_data = request.json
     user_message = user_data.get("message", "").lower().strip()
+    
+    if "how are you" in user_message:
+    return jsonify({"reply": "fine"})
+    
     if user_message == "hi":
         return jsonify({"reply": "hello"})
     
