@@ -1,17 +1,9 @@
-#import os
+import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from openai import OpenAI
-from dotenv import load_dotenv
-
-load_dotenv()   
-
 
 app = Flask(__name__, static_folder='../') 
 CORS(app)
-
-
-#client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 @app.route('/')
 def index():
@@ -23,46 +15,34 @@ def send_static(path):
 
 @app.route('/chat', methods=['POST'])
 def chat():
+    # 1. Get user input
     user_data = request.json
-    user_message = user_data.get("message", "").lower().strip().replace("?", "")
+    user_message = user_data.get("message", "").lower().strip().replace("?", "").replace("!", "")
 
-    print("User:", user_message)
+    print(f"User sent: {user_message}")
 
+    # 2. Logic for 5 specific messages
     if not user_message:
-        return jsonify({"reply": "Please type something."})
+        return jsonify({"reply": "Please type something!"})
+
+    if user_message in ["hi", "hello", "hey"]:
+        return jsonify({"reply": "Hello! I am HARSHA AI. How can I help you today?"})
 
     if "how are you" in user_message:
-        return jsonify({"reply": "I'm doing great, Harsha! Ready to build some infrastructure."})
-    
-    if user_message in ["hi", "hello", "hey"]:
-        return jsonify({"reply": "Hello! How can HARSHA AI help you today?"})
-    
-    if "good morning" in user_message:
-        return jsonify({"reply": "Good morning! Time to automate the world."})
+        return jsonify({"reply": "I'm running smoothly! Ready to help you with your code."})
 
     if "terraform" in user_message:
-        return jsonify({"reply": "Terraform is an Infrastructure as Code (IaC) tool by HashiCorp."})
-    
-    if "kubernetes" in user_message or "k8s" in user_message:
-        return jsonify({"reply": "Kubernetes is a powerful container orchestration tool."})
+        return jsonify({"reply": "Terraform is great! It's used for Infrastructure as Code (IaC)."})
 
-    if not API_KEY:
-        return jsonify({"reply": "⚠️ AI is not configured yet. Showing scripted response only."})
-        
-    #try:
-    #    response = client.chat.completions.create(
-    #        model="gpt-4o-mini",
-    #        messages=[
-    #            {"role": "system", "content": "You are HARSHA AI, a helpful and witty assistant built by Harsha."},
-    #            {"role": "user", "content": user_message}
-    #        ]
-    #    )
-#        bot_reply = response.choices[0].message.content
-#        return jsonify({"reply": bot_reply})
-#    except Exception as e:
- #       print("ERROR:", str(e))   
-#        return jsonify({"reply": f"Error: {str(e)}"}), 500
+    if "kubernetes" in user_message or "k8s" in user_message:
+        return jsonify({"reply": "Kubernetes is a beast for container orchestration!"})
+
+    if "bye" in user_message or "exit" in user_message:
+        return jsonify({"reply": "Goodbye, Harsha! See you in the next deployment."})
+
+    # 3. Fallback if none of the above 5 match
+    return jsonify({"reply": "I'm currently in 'Script Mode'. I only know about: Hi, How are you, Terraform, K8s, and Bye."})
 
 if __name__ == '__main__':
-    print("Server running at http://127.0.0.1:5000")
+    print("Local Server running at http://127.0.0.1:5000")
     app.run(port=5000, debug=True)
