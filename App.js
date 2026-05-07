@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div className="chat-container">
-      <div className="header">My ChatGPT</div>
+      <div className="header">HARSHA AI</div>
       <div className="chat-window">
         {messages.map((msg, i) => (
           <div key={i} className={`message-wrapper ${msg.sender}`}>
