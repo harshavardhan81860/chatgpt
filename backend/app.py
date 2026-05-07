@@ -24,7 +24,33 @@ def send_static(path):
 @app.route('/chat', methods=['POST'])
 def chat():
     user_data = request.json
-    user_message = user_data.get("message", "")
+    user_message = user_data.get("message", "").lower().strip()
+    if user_message == "hi":
+        return jsonify({"reply": "hello"})
+    
+    if user_message == "how are you?":
+        return jsonify({"reply": "fine"})
+    
+    if user_message == "good morning":
+        return jsonify({"reply": "good morning"})
+        
+    if user_message == "good morning":
+        return jsonify({"reply": "good morning"})
+    
+    if user_message == "good evening":
+        return jsonify({"reply": "good evening"})
+    
+    if user_message == "good night":
+        return jsonify({"reply": "good night"})
+
+    if user_message == "myself harsha":
+        return jsonify({"reply": "hey harsha thats great"})
+    
+    if user_message == "terraform":
+        return jsonify({"reply": "it is a iac tool"})
+    
+    if user_message == "kubernetes":
+        return jsonify({"reply": "it is a container orc tool"})
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -36,6 +62,7 @@ def chat():
         bot_reply = response.choices[0].message.content
         return jsonify({"reply": bot_reply})
     except Exception as e:
+        print(f"OpenAI Error: {e}")
         return jsonify({"reply": f"Error: {str(e)}"}), 500
 
 if __name__ == '__main__':
