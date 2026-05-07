@@ -47,7 +47,7 @@ def chat():
         return jsonify({"reply": "Kubernetes is a powerful container orchestration tool."})
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are HARSHA AI, a helpful and witty assistant built by Harsha."},
                 {"role": "user", "content": user_message}
