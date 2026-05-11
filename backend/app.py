@@ -26,19 +26,26 @@ def home():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    data = request.get_json()  # safer
+    try:
+        data = request.get_json()
 
-    if not data:
-        return jsonify({"error": "Invalid or missing JSON"}), 400
+        print("Incoming data:", data)  # DEBUG
 
-    user_message = data.get("message", "")
+        if not data:
+            return jsonify({"error": "No JSON received"}), 400
 
-    if not user_message:
-        return jsonify({"response": "Please send a message"}), 400
+        user_message = data.get("message", "")
 
-    bot_message = get_bot_response(user_message)
+        if not user_message:
+            return jsonify({"response": "Empty message"}), 400
 
-    return jsonify({"response": bot_message})
+        bot_message = get_bot_response(user_message)
+
+        return jsonify({"response": bot_message})
+
+    except Exception as e:
+        print("ERROR:", str(e))  # VERY IMPORTANT
+        return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
