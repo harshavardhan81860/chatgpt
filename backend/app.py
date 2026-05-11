@@ -26,13 +26,18 @@ def home():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    # Get the message from the JSON request
-    data = request.json
+    data = request.get_json()  # safer
+
+    if not data:
+        return jsonify({"error": "Invalid or missing JSON"}), 400
+
     user_message = data.get("message", "")
-    
-    # Generate response
+
+    if not user_message:
+        return jsonify({"response": "Please send a message"}), 400
+
     bot_message = get_bot_response(user_message)
-    
+
     return jsonify({"response": bot_message})
 
 if __name__ == "__main__":
