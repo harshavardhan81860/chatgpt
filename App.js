@@ -1,35 +1,63 @@
-const handleSend = async () => {
-    if (!input) return;
+const { useState } = React;
 
-    const userMsg = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
+const App = () => {
+    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const messageToSend = input;
-    setInput("");
-    setLoading(true);
+    const handleSend = async () => {
+        if (!input.trim()) return;
 
-    try {
-        const response = await axios.post("http://127.0.0.1:5000/chat", {
-            message: messageToSend,
-        });
+        const userMsg = { sender: "user", text: input };
+        setMessages((prev) => [...prev, userMsg]);
 
-        const botMsg = { sender: "bot", text: response.data.response };
-        setMessages((prev) => [...prev, botMsg]);
+        const messageToSend = input;
+        setInput("");
+        setLoading(true);
 
-    } catch (error) {
-        console.error("Error details:", error);
-        setMessages((prev) => [
-            ...prev,
-            { sender: "bot", text: "Error connecting to AI server." },
-        ]);
-    } finally {
-        setLoading(false);
-        // DO NOT RENDER THE ROOT HERE
-    }
+        try {
+            const response = await axios.post("http://127.0.0.1:5000/chat", {
+                message: messageToSend,
+            });
+
+            const botMsg = { sender: "bot", text: response.data.response };
+            setMessages((prev) => [...prev, botMsg]);
+
+        } catch (error) {
+            console.error("Error details:", error);
+            setMessages((prev) => [
+                ...prev,
+                { sender: "bot", text: "Error connecting to AI server." },
+            ]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="chat-container">
+            <div className="header">HARSHA AI</div>
+            <div className="chat-window">
+                {messages.map((msg, index) => (
+                    <div key={index} className={`message-wrapper ${msg.sender}`}>
+                        <div className="message-bubble">{msg.text}</div>
+                    </div>
+                ))}
+                {loading && <div className="loading">Assistant is typing...</div>}
+            </div>
+            <div className="input-area">
+                <input 
+                    value={input} 
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                    placeholder="Type a message..."
+                />
+                <button onClick={handleSend}>Send</button>
+            </div>
+        </div>
+    );
 };
 
-// ... Rest of your component (return JSX) ...
-
-// THIS GOES AT THE VERY END OF THE FILE, OUTSIDE THE APP COMPONENT
+// Mount the app
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
