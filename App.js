@@ -22,7 +22,7 @@ const handleSend = async () => {
     console.error("Error details:", error);
     setMessages((prev) => [
       ...prev,
-      { sender: "bot", text: "Error connecting to AI." },
+      { sender: "bot", text: "HI" },
     ]);
   } finally {
     setLoading(false);
