@@ -1,26 +1,33 @@
 const handleSend = async () => {
-    if (!input) return;
+  if (!input.trim()) return;
 
-    const userMsg = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
+  const userMsg = { sender: "user", text: input };
+  setMessages((prev) => [...prev, userMsg]);
+  
+  const messageToSend = input; 
+  setInput("");
+  setLoading(true);
+
+  try {
+    // 1. Axios automatically handles JSON and headers
+    const response = await axios.post("http://127.0.0.1:5000/chat", { 
+      message: messageToSend 
+    });
+
+    // 2. Axios data is found in response.data (not response.json())
+    const botMsg = { 
+      sender: "bot", 
+      text: response.data.response // Matches the 'response' key from Python
+    };
     
-    // Save input to a constant because setInput("") happens immediately
-    const messageToSend = input; 
-    setInput("");
-    setLoading(true);
-
-    try {
-      const response = await axios.post("/chat", { message: messageToSend });
-
-      if (!response.ok) throw new Error("Server error");
-
-      const data = await response.json();
-      const botMsg = { sender: "bot", text: data.reply };
-      setMessages((prev) => [...prev, botMsg]);
-    } catch (error) {
-      console.error("Error details:", error); // Check your browser console!
-      setMessages((prev) => [...prev, { sender: "bot", text: "Error connecting to AI." }]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setMessages((prev) => [...prev, botMsg]);
+  } catch (error) {
+    console.error("Error details:", error.response || error.message);
+    setMessages((prev) => [
+      ...prev, 
+      { sender: "bot", text: "Error connecting to AI." }
+    ]);
+  } finally {
+    setLoading(false);
+  }
+};
