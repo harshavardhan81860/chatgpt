@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # 1. Add this import
 
 app = Flask(__name__)
+CORS(app)
 
 # Simple logic for the bot's responses
 def get_bot_response(user_text):
